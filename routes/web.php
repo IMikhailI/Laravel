@@ -18,7 +18,19 @@ Route::get('/buildings', [BuildingController::class, 'index']);
 Route::get('/rooms', [RoomController::class, 'index']);
 
 Route::get('/building/{id}', [BuildingController::class, 'show']);
-Route::get('/room/{id}', [RoomController::class, 'show']);
+// Route::get('/room/{id}', [RoomController::class, 'show']);
 
 Route::get('/guests', [GuestController::class, 'index']);
 Route::get('/guest/{id}', [GuestController::class, 'show']);
+
+
+Route::get('/room/create', [RoomController::class, 'create']);
+Route::post('/room', [RoomController::class, 'store']);
+
+Route::get('/room/edit/{id}', [RoomController::class, 'edit']);
+Route::post('/room/update/{id}', [RoomController::class, 'update']);
+
+Route::get('/room/destroy/{id}', [RoomController::class, 'destroy']);
+
+// ПОТОМ общий маршрут с параметром
+Route::get('/room/{id}', [RoomController::class, 'show']);

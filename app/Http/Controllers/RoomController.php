@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\Building;
+use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
@@ -16,5 +18,56 @@ class RoomController extends Controller
     {
         $room = Room::with(['building', 'guests'])->findOrFail($id);
         return view('room', compact('room'));
+    }
+
+    public function create()
+    {
+        $buildings = Building::all();
+        return view('room_create', compact('buildings'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'building_id' => ['required', 'integer', 'exists:building,id'],
+            'room_number' => ['required', 'string', 'max:10'],
+            'beds_count'  => ['required', 'integer', 'min:1', 'max:20'],
+            'price'       => ['required', 'numeric', 'min:0'],
+        ]);
+
+        Room::create($validated);
+
+        return redirect('/rooms');
+    }
+
+    public function edit(int $id)
+    {
+        $room = Room::findOrFail($id);
+        $buildings = Building::all();
+
+        return view('room_edit', compact('room', 'buildings'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'building_id' => ['required', 'integer', 'exists:building,id'],
+            'room_number' => ['required', 'string', 'max:10'],
+            'beds_count'  => ['required', 'integer', 'min:1', 'max:20'],
+            'price'       => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $room = Room::findOrFail($id);
+        $room->update($validated);
+
+        return redirect('/rooms');
+    }
+
+    public function destroy(int $id)
+    {
+        $room = Room::findOrFail($id);
+        $room->delete();
+
+        return redirect('/rooms');
     }
 }
