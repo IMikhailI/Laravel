@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Building;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RoomController extends Controller
 {
@@ -45,8 +46,13 @@ class RoomController extends Controller
     public function edit(int $id)
     {
         $room = Room::findOrFail($id);
+        if (!Gate::allows('edit-room', $room)) {
+            return redirect('/error')->with(
+                'message',
+                'У вас нет разрешения на редактирование товара номер ' . $id
+            );
+        }
         $buildings = Building::all();
-
         return view('room_edit', compact('room', 'buildings'));
     }
 
@@ -65,11 +71,19 @@ class RoomController extends Controller
         return redirect('/rooms');
     }
 
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
-        $room = Room::findOrFail($id);
-        $room->delete();
+        if (!Gate::allows('destroy-room', Room::all()->where('id', $id)->first())) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на удаление товара номер ' . $id
+            );
+        }
 
-        return redirect('/rooms');
+        Room::destroy($id);
+        return redirect('/room');
+        ыфс
+        фс
+        фсы
+        
     }
 }
