@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $rooms = Room::with('building')->get();
+        $perPage = $request->get('perpage', 5);
+
+        $rooms = Room::with('building')->paginate($perPage)->withQueryString();
+
         return view('rooms', compact('rooms'));
     }
-
     public function show(int $id)
     {
         $room = Room::with(['building', 'guests'])->findOrFail($id);
