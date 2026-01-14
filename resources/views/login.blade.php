@@ -1,44 +1,50 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>609-51</title>
-    <style>
-        .is-invalid { color: red; }
-    </style>
-</head>
-<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Laravel Project</a>
 
-@if($user)
-    <h2>Здравствуйте, {{$user->name}}</h2>
-    <a href="{{url('logout')}}">Выйти из системы</a>
-@else
-    <h2>Вход в систему</h2>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <form method="post" action="{{url('auth')}}">
-        @csrf
+            <div class="collapse navbar-collapse" id="navbarCollapse">
 
-        <label>E-mail</label><br>
-        <input type="text" name="email" value="{{old('email')}}">
-        @error('email')
-            <div class="is-invalid">{{$message}}</div>
-        @enderror
-        <br>
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" aria-current="page"
+                           data-bs-toggle="dropdown" href="{{ url('rooms') }}">Комнаты</a>
 
-        <label>Пароль</label><br>
-        <input type="password" name="password" value="{{old('password')}}">
-        @error('password')
-            <div class="is-invalid">{{$message}}</div>
-        @enderror
-        <br>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url('rooms') }}">Все комнаты</a></li>
+                            <li><a class="dropdown-item" href="{{ url('room/create') }}">Добавить комнату</a></li>
+                        </ul>
+                    </li>
+                </ul>
 
-        <input type="submit">
-    </form>
+                @if(!Auth::user())
+                    <form class="d-flex" method="post" action="{{ url('auth') }}">
+                        @csrf
+                        <input class="form-control me-2" type="text" placeholder="Логин"
+                               name="email" aria-label="Логин" value="{{ old('email') }}"/>
 
-    @error('error')
-        <div class="is-invalid">{{$message}}</div>
-    @enderror
-@endif
+                        <input class="form-control me-2" type="password" placeholder="Пароль"
+                               name="password" aria-label="Пароль" value="{{ old('password') }}"/>
 
-</body>
-</html>
+                        <button class="btn btn-outline-success" type="submit">Войти</button>
+                    </form>
+                @else
+                    <ul class="navbar-nav">
+                        <a class="nav-link active" href="#">
+                            <i class="fa fa-user" style="font-size:20px;color:white;"></i>
+                            <span> </span>{{ Auth::user()->name }} ({{ Auth::user()->email }})
+                        </a>
+                        <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url('logout') }}">Выйти</a>
+                    </ul>
+                @endif
+
+            </div>
+        </div>
+    </nav>
+</header>

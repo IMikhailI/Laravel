@@ -17,6 +17,7 @@ class RoomController extends Controller
 
         return view('rooms', compact('rooms'));
     }
+    
     public function show(int $id)
     {
         $room = Room::with(['building', 'guests'])->findOrFail($id);
@@ -46,15 +47,17 @@ class RoomController extends Controller
     public function edit(int $id)
     {
         $room = Room::findOrFail($id);
-        if (!Gate::allows('edit-room', $room)) {
-            return redirect('/error')->with(
-                'message',
-                'У вас нет разрешения на редактирование товара номер ' . $id
-            );
+
+        if (Gate::denies('edit-room', $room)) {
+            return redirect('/rooms')->withErrors([
+                'delete' => 'У вас нет разрешения на редактирование комнаты номер ' . $id
+            ]);
         }
+
         $buildings = Building::all();
         return view('room_edit', compact('room', 'buildings'));
     }
+
 
     public function update(Request $request, int $id)
     {
@@ -73,17 +76,18 @@ class RoomController extends Controller
 
     public function destroy(string $id)
     {
-        if (!Gate::allows('destroy-room', Room::all()->where('id', $id)->first())) {
-            return redirect('/error')->with('message',
-                'У вас нет разрешения на удаление товара номер ' . $id
-            );
+        $room = Room::findOrFail($id);
+
+        if (Gate::denies('destroy-room', $room)) {
+            return redirect('/rooms')->withErrors([
+                'delete' => 'У вас нет разрешения на удаление комнаты номер ' . $id
+            ]);
         }
 
-        Room::destroy($id);
-        return redirect('/room');
-        ыфс
-        фс
-        фсы
-        
+        $room->delete();
+
+        return redirect('/rooms')->withErrors([
+            'delete' => 'Комната номер ' . $id . ' удалена'
+        ]);
     }
 }

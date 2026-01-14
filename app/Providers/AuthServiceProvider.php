@@ -12,11 +12,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('destroy-room', function (User $user, Room $room) {
-            return $user->is_admin || $room->price < 2000;
+            return $user->name === 'Admin';
         });
 
         Gate::define('edit-room', function (User $user, Room $room) {
-            return $user->is_admin;
+            return $user->name === 'Admin';
         });
     }
 }

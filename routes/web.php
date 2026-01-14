@@ -15,16 +15,20 @@ Route::get('/hello', function () {
     return view('hello', ['title' => 'Hello world!']);
 });
 
-Route::get('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/login', function () {
+    return view('login_page');
+})->name('login');
+
 Route::get('/logout', [LoginController::class, 'logout']);
 Route::post('/auth', [LoginController::class, 'authenticate']);
+
+Route::get('/rooms', [RoomController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
 
     Route::get('/buildings', [BuildingController::class, 'index']);
     Route::get('/building/{id}', [BuildingController::class, 'show']);
 
-    Route::get('/rooms', [RoomController::class, 'index']);
     Route::get('/room/create', [RoomController::class, 'create']);
     Route::post('/room', [RoomController::class, 'store']);
     Route::get('/room/edit/{id}', [RoomController::class, 'edit']);
@@ -35,8 +39,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/guests', [GuestController::class, 'index']);
     Route::get('/guest/{id}', [GuestController::class, 'show']);
 
-});
-
-Route::get('/error', function () {
-    return view('error', ['message' => session('message')]);
 });

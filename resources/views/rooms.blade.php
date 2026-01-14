@@ -1,44 +1,40 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Комнаты</title>
-</head>
-<body>
-<h1>Комнаты</h1>
-
-<a href="/room/create">Добавить комнату</a>
-
-<table border="1" cellpadding="6" cellspacing="0">
-    <tr>
-        <th>ID</th>
-        <th>Корпус</th>
-        <th>Номер</th>
-        <th>Мест</th>
-        <th>Цена</th>
-        <th>Редактировать</th>
-        <th>Удалить</th>
-    </tr>
-
-    @foreach($rooms as $r)
-        <tr>
-            <td>{{ $r->id }}</td>
-            <td>{{ $r->building?->name }}</td>
-            <td>{{ $r->room_number }}</td>
-            <td>{{ $r->beds_count }}</td>
-            <td>{{ $r->price }}</td>
-            <td><a href="/room/edit/{{ $r->id }}">Редактировать</a></td>
-            <td>
-                <a href="/room/destroy/{{ $r->id }}"
-                   onclick="return confirm('Удалить комнату?')">
-                    Удалить
-                </a>
-            </td>
-        </tr>
-    @endforeach
-</table>
-
-{{$rooms->links()}}
-
-</body>
-</html>
+@extends('layout')
+@section('content')
+<div class="container" style="margin-top: 80px">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="m-0">Список комнат</h2>
+        <a href="{{ url('room/create') }}" class="btn btn-primary">Добавить комнату</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Корпус</th>
+                <th>Номер</th>
+                <th>Мест</th>
+                <th>Цена</th>
+                <th>Удалить / Редактировать</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($rooms as $room)
+                <tr>
+                    <td>{{ $room->id }}</td>
+                    <td>{{ $room->building?->name }}</td>
+                    <td>{{ $room->room_number }}</td>
+                    <td>{{ $room->beds_count }}</td>
+                    <td>{{ $room->price }}</td>
+                    <td class="d-flex gap-2">
+                        <a href="{{ url('room/destroy/'.$room->id) }}" class="btn btn-danger"
+                           onclick="return confirm('Удалить комнату?')">Удалить</a>
+                        <a href="{{ url('room/edit/'.$room->id) }}" class="btn btn-primary">Редактировать</a>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+    {{ $rooms->links() }}
+</div>
+@endsection
