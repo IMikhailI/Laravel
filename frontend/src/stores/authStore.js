@@ -16,8 +16,7 @@ export const useAuthStore = defineStore('auth', {
       this.errorMessage = ''
 
       try {
-        const response = await axios.post(
-          `${backendUrl}/login`,
+        const response = await axios.post(`${backendUrl}/login`,
           credentials,
           {
             headers: {
