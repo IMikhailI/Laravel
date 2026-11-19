@@ -7,42 +7,34 @@ use App\Models\Guest;
 
 class GuestControllerApi extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        return response(Guest::all());
+        $page = max(0, (int) $request->query('page', 0));
+        $perpage = max(1, (int) $request->query('perpage', 5));
+
+        return response(Guest::orderBy('id')->limit($perpage)->offset($page * $perpage)->get());
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function total()
+    {
+        return response(Guest::count());
+    }
+
     public function show(string $id)
     {
         return response(Guest::find($id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //

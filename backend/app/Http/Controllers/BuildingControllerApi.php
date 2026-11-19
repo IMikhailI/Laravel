@@ -7,25 +7,24 @@ use App\Models\Building;
 
 class BuildingControllerApi extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        return response(Building::all());
+        $page = max(0, (int) $request->query('page', 0));
+        $perpage = max(1, (int) $request->query('perpage', 5));
+
+        return response(Building::orderBy('id')->limit($perpage)->offset($page * $perpage)->get());
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function total()
+    {
+        return response(Building::count());
+    }
+
     public function show(string $id)
     {
         return response(Building::find($id));
     }
     
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
